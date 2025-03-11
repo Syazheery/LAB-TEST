@@ -1,0 +1,89 @@
+<?php
+$destinations = [
+	"Paris" => 500,
+	"Tokyo" => 800,
+	"London" => 600,
+	"Dubai" => 400,
+	"Sydney" => 700,
+];
+
+$accomodations = [
+	"Budget" => 50,
+	"Standard" => 100,
+	"Luxury" => 200,
+];
+
+function calculateBudget($destination, $numTravel, $numDays, $accomodation)
+{
+	global $destinations;
+	$flightFare = $destinations[$destination] ?? 0;
+
+	$dailyExpense = 50;
+
+	global $accomodations;
+	$accomodationFare = $accomodations[$accomodation] ?? 0;
+
+	$totalBudget = $flightFare + $dailyExpense + $accomodationFare * $numTraveller * $numDays; 
+	
+	if ($numTraveller >= 4) {
+		$totalBudget *= 0.9;
+	}
+
+	return $totalBudget;
+}	
+
+	if ($_SERVER['REQUEST_METHOD'] == "POST") {
+		$name = $_POST['name'];
+		$destination = $_POST['destination'];
+		$numTraveller = $_POST['numTravel'];
+		$numDays = $_POST['numDays'];
+		$accomodation = $_POST['accomodation'];
+
+		$budget = calculateBudget($destination, $numTraveller, $numDays, $accomodation);
+	}
+	?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BUDGET VACATION CALCULATOR</title>
+</head>
+<body>
+	<h2>Online Vacation Budget Calculator</h2>
+	<form method="post">
+		Name: <input type="text" name="name" required><br>
+		Destination:
+		<select name="destination" required>
+			<?php foreach ($destinations as $destination => $rate) { ?>
+				<option value="<?php echo $destination; ?>"><?php echo $destination; ?></option>
+			<?php } ?>
+		</select><br>
+		No. of Travellers: <input type="number" name="num_traveller" min="1" required><br>
+		Days: <input type="number" name="num_days" min="1" required><br>
+		Accomodation: 
+		<select name="accomodation" required>
+			<?php foreach ($accomodations as $accomodation => $rates) { ?>
+				<option value="<?php echo $accomodation; ?>"><?php echo $accomodation; ?></option>
+			<?php } ?>
+		</select><br>
+		<input type="submit" value="Calculate Budget">
+	</form>
+
+	<?php if (isset($destination)) { ?>
+		<h3>Budget Details</h3>
+		<table border="1">
+			<tr><th>Travller Name</th><th>Destination</th><th>No. Of Travller</th><th>Days</th><th>Accomodation</th><th>Total Cost</th></tr>
+			<tr>
+				<td><?php echo htmlspecialchars($name); ?></td>
+				<td><?php echo htmlspecialchars($destination); ?></td>
+				<td><?php echo htmlspecialchars($numTraveller); ?></td>
+				<td><?php echo htmlspecialchars($numDays); ?></td>
+				<td><?php echo htmlspecialchars($accomodation); ?></td>
+				<td>RM<?php echo number_format($budget, 2); ?></td>
+			</tr>
+		</table>
+	<?php } ?>
+</body>
+</html>
