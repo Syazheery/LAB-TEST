@@ -13,18 +13,20 @@ $accomodations = [
 	"Luxury" => 200,
 ];
 
-function calculateBudget($destination, $numTravel, $numDays, $accomodation)
+function calculateBudget($destination, $numTraveller, $numDays, $accomodation)
 {
-	global $destinations;
-	$flightFare = $destinations[$destination] ?? 0;
-
-	$dailyExpense = 50;
-
-	global $accomodations;
-	$accomodationFare = $accomodations[$accomodation] ?? 0;
-
-	$totalBudget = $flightFare + $dailyExpense + $accomodationFare * $numTraveller * $numDays; 
+	global $destinations, $accomodations;
 	
+	$flightFare = $destinations[$destination] ?? 0;
+	$dailyExpense = 50;
+	$accomodationCost = $accomodations[$accomodation] ?? 0;
+
+	$totalFlightCost = $flightFare * $numTraveller;
+	$totalDailyExpense = $dailyExpense * $numTraveller * $numDays;
+	$totalAccomodationCost = $accomodationCost * $numTraveller * $numDays;
+	
+ 	$totalBudget = $totalFlightCost + $totalDailyExpense + $totalAccomodationCost;
+
 	if ($numTraveller >= 4) {
 		$totalBudget *= 0.9;
 	}
@@ -35,8 +37,8 @@ function calculateBudget($destination, $numTravel, $numDays, $accomodation)
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$name = $_POST['name'];
 		$destination = $_POST['destination'];
-		$numTraveller = $_POST['numTravel'];
-		$numDays = $_POST['numDays'];
+		$numTraveller = $_POST['num_traveller'];
+		$numDays = $_POST['num_days'];
 		$accomodation = $_POST['accomodation'];
 
 		$budget = calculateBudget($destination, $numTraveller, $numDays, $accomodation);
